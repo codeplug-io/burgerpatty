@@ -16,15 +16,8 @@
   background-color: white;
 }
 
-@media (min-width: 699px) {
+@media (min-width: 500px) {
   .DrawerToggle {
     display: none;
-  }
-}
-@media (max-width: 450px) {
-  .DrawerToggle div {
-    width: 60%;
-    height: 3px;
-    background-color: white;
   }
 }

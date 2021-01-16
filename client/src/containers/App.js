@@ -1,80 +1,87 @@
 import React, { Component } from "react";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
+// import { BrowserRouter, Route, withRouter } from "react-router-dom";
 import "./App.css";
-import Layout from "./Layout/Layout";
-import HomePage from "./HomePage/HomePage";
-import Blog from "./Blog/Blog";
-import Counter from "./Counter/Counter.js";
+import Layout from "../components/Layout/Layout";
+import BurgerBuilder from "./BurgerBuilder/BurgerBuilder";
 import { StyleRoot } from "radium";
-import { BrowserRouter } from "react-router-dom";
-import Persons from "./Persons/Persons";
-//Grommet
-import { Grommet } from "grommet";
-
-// import classes from "./App.css";
+import style from "../components/Layout/layout-style.js";
+import Checkout from "./Checkout/Checkout";
+import Orders from "./Orders/Orders";
+import Auth from "./Auth/Auth";
+import Logout from "./Auth/Logout";
+//Login
+import { connect } from "react-redux";
+import * as actionCreators from "../store/actions/index";
 
 // import Cockpit from "../components/Cockpit/Cockpit";
 // import WithClass from "../hoc/withClass";
 //this file will hold future routing logic...
 class App extends Component {
-  state = {
-    mainContent: "homepage"
-  };
-
-  changeMainContentHandler = page => {
-    this.setState({ mainContent: page });
-  };
-  //
-
+  componentDidMount() {
+    this.props.onTryAutoLogin();
+  }
+  // componentDidMount() {
+  //   setTimeout(() => {
+  //     alert(
+  //       "Delish Offer! make your orders and get em doubled, expires tomorrow."
+  //     );
+  //   }, 6000);
+  // }
   render() {
-    let title = "Title/page Name";
-    let mainContentToRender;
-    //
-    switch (this.state.mainContent) {
-      case "homepage":
-        mainContentToRender = <HomePage title={title} />;
-        break;
-      case "blog":
-        mainContentToRender = (
-          <BrowserRouter>
-            <Blog title={title} />{" "}
-          </BrowserRouter>
-        );
-        break;
-      case "counter":
-        mainContentToRender = <Counter />;
-        break;
-      case "users":
-        mainContentToRender = (
-          <div className="App">
-            <ol>
-              <li>
-                Turn this app into one which does NOT use local state (in
-                components) but instead uses Reduxess
-              </li>
-            </ol>
-            <Persons />
-          </div>
-        );
-        break;
-      default:
-        mainContentToRender = null;
-    }
-
+    let title = "Relevant Title Name Space";
     return (
-      <Grommet plain>
-        <BrowserRouter>
-          <StyleRoot>
-            <Layout
-              changePage={this.changeMainContentHandler}
-              mainContent={this.state.mainContent}
-            >
-              {mainContentToRender}
-            </Layout>
-          </StyleRoot>
-        </BrowserRouter>
-      </Grommet>
+      <BrowserRouter>
+        <StyleRoot>
+          <Layout>
+            <div style={style.query}>
+              {this.props.isAuth ? (
+                <Route path="/checkout" component={Checkout} />
+              ) : null}
+              {this.props.isAuth ? (
+                <Route path="/orders" component={Orders} />
+              ) : null}
+              <Route path="/auth" component={Auth} />
+              {this.props.isAuth ? (
+                <Route path="/logout" component={Logout} />
+              ) : null}
+              <Route
+                path="/"
+                exact
+                render={props => <BurgerBuilder title={title} {...props} />}
+              />
+              <Redirect to="/" />
+            </div>
+          </Layout>
+        </StyleRoot>
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    isAuth: state.auth.token !== null
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryAutoLogin: () => dispatch(actionCreators.checkAuthState())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+//FIXING ERRORS WITH Connect and Routing
+// import { BrowserRouter, Route, withRouter } from "react-router-dom";
+// export default withRouter(
+//   connect(
+//     null,
+//     mapDispatchToProps
+//   )(App)
+// );
+//Mine didnt break because i didnt wrap my app in index.js with <BrowserRouter />
+//still locking out to see if there are unknown/undetectable behaviors in the Route paths

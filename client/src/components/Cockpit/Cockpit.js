@@ -1,6 +1,5 @@
 import React from "react";
 import Auxi from "../../hoc/auxi";
-import classes from "../../containers/App.css";
 
 const cockpit = props => {
   let title;
@@ -12,7 +11,7 @@ const cockpit = props => {
   return (
     <Auxi>
       <h1>{title}</h1>
-      <button onClick={props.toggleShow} className={classes.personsButton}>
+      <button onClick={props.toggleShow} className="persons-button">
         alter cards
       </button>
     </Auxi>

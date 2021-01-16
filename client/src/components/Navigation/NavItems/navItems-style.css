@@ -7,10 +7,8 @@
   align-items: center;
   height: 100%;
 }
-.NavigationItems:hover {
-  cursor: pointer;
-}
-@media (min-width: 699px) {
+
+@media (min-width: 500px) {
   .NavigationItems {
     flex-flow: row;
   }
