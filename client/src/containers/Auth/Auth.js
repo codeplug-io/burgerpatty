@@ -94,16 +94,16 @@ class Auth extends Component {
     });
   };
   render() {
-    const fromElementsArray = [];
+    const formElementsArray = [];
 
     for (let key in this.state.controls) {
       //
-      fromElementsArray.push({
+      formElementsArray.push({
         id: key,
         config: this.state.controls[key]
       });
     }
-    const input = fromElementsArray.map(formElement => {
+    const input = formElementsArray.map(formElement => {
       // console.log(formElement);
       return (
         <Input
